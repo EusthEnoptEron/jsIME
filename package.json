@@ -1,6 +1,6 @@
 {
   "name": "jsIME",
-  "version": "0.0.0",
+  "version": "0.1",
   "description": "IME made for browser - just for fun",
   "main": "server.js",
   "config": {
