@@ -22,7 +22,7 @@ var Key = {
 
 
 
-var Composition = module.exports = function() {
+var Composition = module.exports = function(store) {
 	EventEmitter2.apply(this, arguments);
 
 	this.mode = Mode.Idle;
@@ -30,7 +30,7 @@ var Composition = module.exports = function() {
 	this.from;
 	this.to;
 	this.index;
-
+	this.store = store;
 
 	this.text = new JapaneseString();
 	this.converted;
@@ -48,7 +48,7 @@ C.prototype.setMode = function(mode) {
 	this.active = mode > Mode.Idle;
 
 	if(mode == Mode.Selecting) {
-		this.selections = new SelectionList();
+		this.selections = new SelectionList(this.store);
 		this.selections.on("select", function(from, length) {
 			self.emit("select", from + self.from, from + self.from + length);
 		});

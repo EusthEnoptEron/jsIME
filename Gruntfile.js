@@ -9,7 +9,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+        // compress: true
       },
       vanilla: {
         src: 'vanilla/build.js',
@@ -54,7 +55,7 @@ module.exports = function(grunt) {
     browserify: {
         vanilla: {
          dest:'build/module.js',
-         src: 'vanilla/index.js',
+         src: 'vanilla/js/imebox.js',
             options: {
               aliasMappings: [
                 {
@@ -63,14 +64,13 @@ module.exports = function(grunt) {
                   dest: ""
                 },
                 {
-                    cwd: "build",
-                    src: "dict.js",
-                    dest: ""
+                  cwd: "build",
+                  src: "dict.js",
+                  dest: ""
                 }
               ]
             }
         }
-     
     },
     clean: {
         build: ["build"],

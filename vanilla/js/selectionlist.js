@@ -2,12 +2,13 @@ var Selection = require("./selection");
 var EventEmitter2 = require("eventemitter2").EventEmitter2;
 
 
-var SelectionList = module.exports = function(text) {
+var SelectionList = module.exports = function(store) {
 	EventEmitter2.apply(this, arguments);
 
 	this.selected = null;
 	this.items = [];
 	this.text = null
+	this.store = store;
 }
 
 
@@ -47,8 +48,8 @@ SelectionList.prototype.getRange = function(selection) {
 SelectionList.prototype.split = function(direction) {
 	if(direction < 0 && this.selected.length > 1) {
 		var next = this.adjacent(this.selected, true);
-		next.lengthen(-1);
-		this.selected.shorten(-1);
+		next.lengthen(direction);
+		this.selected.shorten(direction);
 		this.updateSelection();
 	} else if(direction > 0 && (this.selected.from + this.selected.length) < this.text.length()) {
 		var next = this.adjacent(this.selected);
@@ -88,7 +89,7 @@ SelectionList.prototype.switch = function(direction) {
 }
 
 SelectionList.prototype.createSelection = function(text, from, length) {
-	var sel = new Selection(text, from, length);
+	var sel = new Selection(text, from, length, this.store);
 	var self = this;
 	sel.on("selection_changed", function(index, oldText, newText) {
 		if(!self.selected) self.selected = this;

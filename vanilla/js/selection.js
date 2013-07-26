@@ -1,18 +1,16 @@
-var SelectionStore = require("localstore");
 var EventEmitter2 = require("eventemitter2").EventEmitter2;
 var Promise = require("promise");
 var _ = require("underscore");
 
-var store = new SelectionStore();
 
-
-var Selection = module.exports = function(text, from, length) {
+var Selection = module.exports = function(text, from, length, store) {
 	EventEmitter2.apply(this, arguments);
 
 	this.length = length;
 	this.from = from;
 	this.text = text;
 	this.index = 0;
+	this.store = store;
 
 	this.selections = [this.actualText()];
 	this.promise = new Promise(function(resolve) {
@@ -24,9 +22,9 @@ Selection.prototype = Object.create(EventEmitter2.prototype);
 
 Selection.prototype.update = function() {
 	var self = this;
-	// this.changeValues([this.actualText()]);
-	this.setIndex(0);
-	this.promise = store.getSelections(this.actualText()).then(function(selections) {
+	this.changeValues([this.actualText()]);
+	// this.setIndex(0);
+	this.promise = this.store.getSelections(this.actualText()).then(function(selections) {
 		self.changeValues(selections);
 	});
 	

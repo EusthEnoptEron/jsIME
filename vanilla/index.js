@@ -1,4 +1,4 @@
-var IMEBox = require("./js/imebox");
+// var IMEBox = require("./js/imebox");
 
 // $(function() {
 	

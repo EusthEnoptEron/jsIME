@@ -2,12 +2,19 @@ var Composition = require("./composition");
 var bonzo = require("bonzo");
 var _ = require("underscore");
 var Input = require("./input");
+var LocalStore = require("localstore");
+var ServerStore = require("serverstore");
 
-module.exports = function(box) {
+window.IMEBox = module.exports = function(box, store) {
 	var win = bonzo(bonzo.create("<ol>")).addClass("ime_window").appendTo(document.body);
 	var underlines = [];
 
-	var composition = new Composition();
+	if(!(store || "").getSelections) {
+		if(store == "server") store = new ServerStore();
+		else store = new LocalStore();
+	}
+
+	var composition = new Composition(store);
 	var I = new Input(box);
 
 	function onLengthChanged(text) {
@@ -43,6 +50,7 @@ module.exports = function(box) {
 	});
 
 	composition.on("replace", function(from, to, text) {
+
 		if(!to && !text) {
 			I.replaceSelectedText(text, true);
 		} else {
