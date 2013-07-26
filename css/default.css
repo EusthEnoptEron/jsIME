@@ -1,0 +1,36 @@
+
+.ime_window {
+	counter-reset: item;
+	list-style-position: inside;
+	border: 1px solid #CCC;
+	border-radius: 2px;
+	margin: 0;
+	padding: 0;
+	/*display: inline-block;*/
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+	position: absolute;
+	display:none;
+	z-index: 5;
+	background-color: white;
+
+}
+.ime_window li:before {
+	content: counter(item);
+	counter-increment: item;
+	padding-right: 4px;
+}
+.ime_window li {
+	list-style-type: none;
+	padding: 2px 5px;
+	font-weight: bold;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+.ime_window li span {
+	font-weight: normal;
+}
+
+.ime_window li.selected {
+	background-color: #E9F2FE;
+	border-color: #758BC8;
+}
