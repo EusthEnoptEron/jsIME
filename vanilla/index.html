@@ -9,65 +9,6 @@
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="../css/default.css">
 		<script src="build.js"></script>
-		<script>
-
-		(function() {
-			// var div;
-
-			function getClone(el) {
-				var curr_style = [];
-				if (window.getComputedStyle) {
-				    curr_style = window.getComputedStyle(el);
-				} else if (el.currentStyle) {
-				    curr_style = $.extend(true, {}, el.currentStyle);
-				}
-
-				var div = $("<div>");
-
-				// console.log(curr_style);
-				$.each(curr_style, function(i, val) {
-					$(div).css(val, $(el).css(val));
-				});
-				div.css("opacity", 0);
-				div.css("position", "relative");
-				div.css("display", "block");
-				div.css("white-space", "pre");
-				return div[0];
-			}
-
-			window.getCaretPosition = function(el, i) {
-				if(i === undefined) i = el.selectionStart;
-				clone = getClone(el);
-				
-				$(clone).text(el.value);
-				var textnode = clone.firstChild;
-				
-				// split between foo and bar
-				var replacementNode = textnode.splitText(i);
-
-				// creating a span with ' span contents '
-				var span = document.createElement('span');
-				$(span).text("!");
-				// adding the span before 'bar'
-				clone.insertBefore(span, replacementNode);
-
-				$("body").append(clone);
-				var pos = $(span).position();
-
-				pos.top -= $(el).scrollTop();
-				pos.left -= $(el).scrollLeft();
-
-
-				pos.bottom = pos.top + $(span).height();
-				console.log(pos);
-				$(clone).remove();
-
-				return pos;
-			}
-		})();
-	
-
-		</script>
 		<style>
 		.underline {
 			position: absolute;
