@@ -1,5 +1,5 @@
 var Selection = require("./selection");
-// var EventEmitter2 = require("eventemitter2");
+var EventEmitter2 = require("eventemitter2").EventEmitter2;
 
 
 var SelectionList = module.exports = function(text) {

@@ -1,6 +1,6 @@
 var SelectionList = require("./selectionlist");
 var JapaneseString = require("./japanesestring");
-// var EventEmitter2 = require("eventemitter2");
+var EventEmitter2 = require("eventemitter2").EventEmitter2;
 
 
 var Mode = {

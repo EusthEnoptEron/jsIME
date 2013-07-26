@@ -1,5 +1,7 @@
 var SelectionStore = require("localstore");
-// var EventEmitter2 = require("eventemitter2");
+var EventEmitter2 = require("eventemitter2").EventEmitter2;
+var Promise = require("promise");
+var _ = require("underscore");
 
 var store = new SelectionStore();
 
@@ -13,9 +15,9 @@ var Selection = module.exports = function(text, from, length) {
 	this.index = 0;
 
 	this.selections = [this.actualText()];
-	var dummy = $.Deferred();
-	dummy.resolve(this.selections);
-	this.promise = dummy.promise();
+	this.promise = new Promise(function(resolve) {
+		resolve();
+	});
 }
 
 Selection.prototype = Object.create(EventEmitter2.prototype);
@@ -32,13 +34,12 @@ Selection.prototype.update = function() {
 
 Selection.prototype.changeValues = function(values) {
 	//If they're equal, return
-	if($(this.selections).not(values).length == 0 && $(values).not(this.selections).length == 0) return false;
+	if(_.isEqual(this.selections, values))  return false;
 
 	var prevResult = this.resultingText();
 
 	this.selections = values;
 	this.index = 0;
-
 	this.emit("values_changed", values);
 	this.emit("selection_changed", this.index, prevResult, this.resultingText());
 }

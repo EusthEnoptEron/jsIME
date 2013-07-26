@@ -45,10 +45,8 @@ module.exports = function(grunt) {
         },
         vanilla: {
             src: [
-            "node_modules/jquery-browser/lib/jquery.js",
-            "node_modules/eventemitter2/lib/eventemitter2.js",
-            "lib/browser/*.js",
-            "build/module.js",
+                "lib/browser/*.js",
+                "build/module.js",
             ],
             dest: "vanilla/build.js"
         }
@@ -120,7 +118,7 @@ module.exports = function(grunt) {
     "concat:vanilla",
     "uglify:vanilla"]);
 
-  grunt.registerTask("build", ["build-server", "build-client", "clean:build"]);
+  grunt.registerTask("build", ["build-server", "build-client"]);
   grunt.registerTask("default", ["build"]);
   grunt.registerTask("compile", ["concat:dict", "browserify", "concat:vanilla", "uglify:vanilla"]);
 };
