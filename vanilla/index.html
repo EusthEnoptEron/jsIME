@@ -8,8 +8,7 @@
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="../css/default.css">
-		<script src="build.js"></script>
-		<script src="index.js"></script>
+		<script type="text/javascript" src="build.js"></script>
 		<style>
 		.underline {
 			position: absolute;
@@ -18,6 +17,15 @@
 			border-bottom: 1px dotted #ccc;
 		}
 		</style>
+
+		<script type="text/javascript">
+		window.addEventListener("load", function() {
+			var areas = document.getElementsByTagName("textarea");
+			for(var i = 0; i < areas.length; i++) {
+				new IMEBox(areas[i], "local");
+			}
+		}, false);
+		</script>
 	</head>
 	<body>
 		<!-- <button>Clone</button> -->
