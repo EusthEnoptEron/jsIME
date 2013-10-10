@@ -1,17 +1,19 @@
-EventEmitter2 = require("eventemitter2").EventEmitter2;
+EventEmitter2 = require("eventemitter2").EventEmitter2
+Composition = require "./composition.coffee"
 _ = require "underscore"
 
 
 FIRST_CHAR = '!'.charCodeAt(0)
 
 class JsIME extends EventEmitter2 
-	@composition = null
-	@offset = 0
+	composition: null
+	offset: 0
 	constructor: (@store) ->
 
 	# Interpret input before it is written
 	preInterpret: (e) ->
-		@composition?.preInterpret(e)
+		return true unless @composition?
+		@composition.preInterpret(e)
 
 	# Interpret input
 	interpret: (e, index) ->
@@ -20,16 +22,19 @@ class JsIME extends EventEmitter2
 			@offset = index
 			@bindComposition()
 
-		@composition?.interpret(e)
+		if e.which > FIRST_CHAR and @composition?
+			return @composition.interpret(e)
+		else
+			return true
 
 	# Bind events of `composition` and proxy them.
 	bindComposition: ->
 		self = this
 		@composition.on "text.select", (from, to) =>
-			@emit "select", from + @offset, to + @offset
+			@emit "text.select", from + @offset, to + @offset
 
 		@composition.on "text.replace", (from, to, text) =>
-			@emit "select", from + @offset, to + @offset, text
+			@emit "text.replace", from + @offset, to + @offset, text
 
 		# Forward event
 		@composition.on "window.*", ->

@@ -1,5 +1,10 @@
-JsIME = require "./jsime"
-Input = require "../vanilla/js/input"
+JsIME = require "./jsime.coffee"
+Input = require "../../vanilla/js/input"
+bonzo = require "bonzo"
+LocalStore = require "localstore"
+ServerStore = require "serverstore"
+
+
 
 imeify = (box, store) ->
 	# Create IME window
@@ -36,7 +41,7 @@ imeify = (box, store) ->
 
 	ime.on "text.replace", (from, to, text) ->
 		I.setSelection(from, to)
-		I.replaceSelectedText(text)
+		I.replaceSelectedText(text, true)
 
 	ime.on "window.show", (values) ->
 		# Add values
@@ -71,3 +76,4 @@ imeify = (box, store) ->
 
 
 module.exports = imeify
+window?.imeify = imeify

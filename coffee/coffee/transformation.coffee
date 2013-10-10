@@ -1,41 +1,63 @@
-EventEmitter2 = require("eventemitter2").EventEmitter2;
+EventEmitter2 = require("eventemitter2").EventEmitter2
 
 class Transformation extends EventEmitter2
-	constructor: (@composition, start, length) ->
+	output: null
+	constructor: (@composition, @start, @length, @active = false) ->
 		@setRange(start, length)
 
-	setRange: (start, length) ->
-		@start = max(0, start)
-		@length = min(@composition.input.length - start, length)
+	destroy: ->
+		@composition = null
 
+	setRange: (start, length) ->
+		@start = Math.max(0, start)
+		@length = Math.max(0, Math.min(@composition.input.length - start, length))
 		@input = @composition.input.substr(@start, @length)
+
+		@output = @input if not @output?
+
 		@setOutput @input
 
+
 	setOutput: (output) ->
-		old = @output
+		offset = @offset()
+		@composition.replaceText( offset, offset + (@output).length, output )
+
+		@composition.revertSelection() unless @active
+
 		@output = output
 
 		# Emit change(old, new, sender)
-		@emit "change.output", old, output, this
+		# @emit "change.output", old, output, this
+
+	offset: ->
+		prev = @prev false
+		if prev
+			return prev.offset() + prev.length
+		else
+			return 0
+
 
 	moveHead: (amount) ->
-		return if amount == 0
+		return @composition.clean() if amount == 0
+		prev = @prev()
 		
 		old = [@start, @length]
 		@setRange @start + amount, @length - amount
 
-		prev = @prev()
-		prev.moveTail( @start - 1 - (prev.start + prev.length) )
+		prev.moveTail( @start - (prev.start + prev.length) )
 
 
 	moveTail: (amount) ->
-		return if amount == 0
+		return @composition.clean() if amount == 0
+		return if @length + amount == 0
+		
+		next = @next()
 
 		old = [@start, @length]
 		@setRange @start, @length + amount
 
-		next = @next()
-		next.moveHead( (@start + @length + 1) - next.start)
+
+		next.moveHead( (@start + @length ) - next.start)
 
 
 	nextChoice: ->
@@ -53,8 +75,9 @@ class Transformation extends EventEmitter2
 			return obj
 		else
 			@composition.transformations.push(
-				new Transformation @composition, @start + @length + 1, 0
+				tmp = new Transformation @composition, @start + @length, 0
 			)
+			return tmp
 
 	prev: (force = true) ->
 		obj = @composition.transformations[@index()-1]
@@ -63,7 +86,19 @@ class Transformation extends EventEmitter2
 			return obj
 		else
 			@composition.transformations.unshift(
-				new Transformation @composition, @start + @length + 1, 0
+				tmp = new Transformation @composition, @start, 0
 			)
+			return tmp
 
-module.exports Transformation
+	activate: ->
+		if !@active
+			for trans in @composition.transformations when trans.active
+				trans.active = false
+			@active = true
+
+			# select this item
+			offset = @offset()
+			@composition.selectText( offset, offset + @output.length )
+
+
+module.exports = Transformation

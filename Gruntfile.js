@@ -15,6 +15,10 @@ module.exports = function(grunt) {
       vanilla: {
         src: 'vanilla/build.js',
         dest: 'vanilla/build.min.js'
+      },
+      coffee: {
+        src: 'coffee/build.js',
+        dest: "coffee/build.min.js"
       }
     },
     curl: {
@@ -30,7 +34,7 @@ module.exports = function(grunt) {
             dest: "edict.json"
         },
         client: {
-            threshold: 20000,
+            threshold: 0,
             src: "build/<%= pkg.config.edict_file %>/<%= pkg.config.edict_file %>",
             dest: "build/edict_mini.json"
         }
@@ -50,6 +54,13 @@ module.exports = function(grunt) {
                 "build/module.js",
             ],
             dest: "vanilla/build.js"
+        },
+        coffee: {
+            src: [
+                "lib/browser/*.js",
+                "build/module.js",
+            ],
+            dest: "coffee/build.js"
         }
     },
     browserify: {
@@ -66,6 +77,58 @@ module.exports = function(grunt) {
                 {
                   cwd: "build",
                   src: "dict.js",
+                  dest: ""
+                },
+                {
+                  cwd: "vanilla/js",
+                  src: ["composition.js", "imebox.js"],
+                  dest: ""
+                }
+              ]
+            }
+        },
+        coffee: {
+          dest:'build/module.js',
+          src: 'coffee/coffee/imeify.coffee',
+           options: {
+              transform: ['coffeeify'],
+              aliasMappings: [
+                {
+                  cwd: "lib",
+                  src: ["edict.js", "localstore.js", "serverstore.js"],
+                  dest: ""
+                },
+                {
+                  cwd: "build",
+                  src: "dict.js",
+                  dest: ""
+                },
+                {
+                  cwd: "coffee/coffee",
+                  src: ["imeify.coffee"],
+                  dest: ""
+                }
+              ]
+            }
+        },
+        csharp:{
+         dest:'E:/Dev/VS/JavaScriptTest/JavaScriptTest/build.js',
+         src: 'vanilla/js/composition.js',
+            options: {
+              aliasMappings: [
+                {
+                  cwd: "lib",
+                  src: ["edict.js", "localstore.js", "serverstore.js"],
+                  dest: ""
+                },
+                {
+                  cwd: "build",
+                  src: "dict.js",
+                  dest: ""
+                },
+                {
+                  cwd: "vanilla/js",
+                  src: ["composition.js", "imebox.js"],
                   dest: ""
                 }
               ]
@@ -120,5 +183,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask("build", ["build-server", "build-client"]);
   grunt.registerTask("default", ["build"]);
-  grunt.registerTask("compile", ["concat:dict", "browserify", "concat:vanilla", "uglify:vanilla"]);
+  grunt.registerTask("compile", ["concat:dict", "browserify:vanilla", "concat:vanilla", "uglify:vanilla"]);
+  grunt.registerTask("brew", ["concat:dict", "browserify:coffee", "concat:coffee" /*, "uglify:coffee" */]);
+  grunt.registerTask("csharp", ["concat:dict", "browserify:csharp"]);
 };
