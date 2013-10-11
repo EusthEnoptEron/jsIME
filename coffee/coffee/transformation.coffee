@@ -6,7 +6,7 @@ Represents a part of the composition that is being transformed.
 class Transformation extends EventEmitter2
 	output: null
 	reqid: 0
-	index: 0
+	choiceIndex: 0
 	choices: []
 
 	constructor: (@composition, @start, @length, @active = false) ->
@@ -41,8 +41,8 @@ class Transformation extends EventEmitter2
 		@setIndex 1
 
 	setIndex: (i) ->
-		@index = (@choices.length + i) % @choices.length
-		@setOutput @choices[@index]
+		@choiceIndex = (@choices.length + i) % @choices.length
+		@setOutput @choices[@choiceIndex]
 
 	# Update output that is displayed for the range of this transformation
 	setOutput: (output) ->
@@ -88,11 +88,10 @@ class Transformation extends EventEmitter2
 
 
 	nextChoice: ->
-		@setIndex @index + 1
+		@setIndex @choiceIndex + 1
 
 	prevChoice: ->
-		@setIndex @index - 1
-		
+		@setIndex @choiceIndex - 1		
 
 	index: ->
 		@composition.transformations.indexOf this	
