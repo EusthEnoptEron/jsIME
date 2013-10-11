@@ -5,6 +5,10 @@ Represents a part of the composition that is being transformed.
 ###
 class Transformation extends EventEmitter2
 	output: null
+	reqid: 0
+	index: 0
+	choices: []
+
 	constructor: (@composition, @start, @length, @active = false) ->
 		@setRange(start, length)
 
@@ -20,8 +24,25 @@ class Transformation extends EventEmitter2
 		# Set input back to hiragana value
 		@input = @composition.input.substr(@start, @length)
 		@output = @input if not @output?
+
+		@resetList()
 		
-		@setOutput @input
+		reqid = ++@reqid
+		@composition.store.getSelections(@input).then (choices) =>
+			@updateList(choices) unless reqid isnt @reqid
+
+	resetList: () ->
+		@choices = [@input]
+		@setIndex 0
+
+
+	updateList: (choices) ->
+		@choices = choices
+		@setIndex 1
+
+	setIndex: (i) ->
+		@index = (@choices.length + i) % @choices.length
+		@setOutput @choices[@index]
 
 	# Update output that is displayed for the range of this transformation
 	setOutput: (output) ->
@@ -67,9 +88,11 @@ class Transformation extends EventEmitter2
 
 
 	nextChoice: ->
-		# TODO: implement
+		@setIndex @index + 1
+
 	prevChoice: ->
-		# TODO: implement
+		@setIndex @index - 1
+		
 
 	index: ->
 		@composition.transformations.indexOf this	
