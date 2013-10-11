@@ -1,23 +1,29 @@
 EventEmitter2 = require("eventemitter2").EventEmitter2
 
+###
+Represents a part of the composition that is being transformed.
+###
 class Transformation extends EventEmitter2
 	output: null
 	constructor: (@composition, @start, @length, @active = false) ->
 		@setRange(start, length)
 
+	# Destroy this transformation
 	destroy: ->
 		@composition = null
 
+	# Set new range for transformation and updates the displayed text accordingly
 	setRange: (start, length) ->
 		@start = Math.max(0, start)
 		@length = Math.max(0, Math.min(@composition.input.length - start, length))
+		
+		# Set input back to hiragana value
 		@input = @composition.input.substr(@start, @length)
-
 		@output = @input if not @output?
-
+		
 		@setOutput @input
 
-
+	# Update output that is displayed for the range of this transformation
 	setOutput: (output) ->
 		offset = @offset()
 		@composition.replaceText( offset, offset + (@output).length, output )
