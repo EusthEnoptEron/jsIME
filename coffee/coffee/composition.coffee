@@ -24,6 +24,7 @@ class Composition extends TransformableText
 	
 	transformations: []
 
+	constructor: (@store) ->
 	activeTransformation: ->
 		for transformation in @transformations
 			return transformation if transformation.active

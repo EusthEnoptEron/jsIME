@@ -18,7 +18,7 @@ class JsIME extends EventEmitter2
 	# Interpret input
 	interpret: (e, index) ->
 		if e.which > FIRST_CHAR and not @composition?
-			@composition = new Composition()
+			@composition = new Composition(@store)
 			@offset = index
 			@bindComposition()
 
