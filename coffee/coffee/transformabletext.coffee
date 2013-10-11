@@ -57,9 +57,7 @@ class TransformableText extends EventEmitter2
 
 	add: (text) ->
 		text = @input.substr(0, @selectionStart) + text		
-		console.log "b", text
 		text = convert text, true
-		console.log "a", text
 
 		@replaceText 0, @selectionStart, text, true
 		@selectText @selectionEnd, @selectionEnd
