@@ -35,7 +35,6 @@ class Transformation extends EventEmitter2
 		@choices = [@input]
 		@setIndex 0
 
-
 	updateList: (choices) ->
 		@choices = choices
 		@setIndex 1
@@ -48,7 +47,6 @@ class Transformation extends EventEmitter2
 	setOutput: (output) ->
 		offset = @offset()
 		@composition.replaceText( offset, offset + (@output).length, output )
-
 		@composition.revertSelection() unless @active
 
 		@output = output
@@ -59,7 +57,7 @@ class Transformation extends EventEmitter2
 	offset: ->
 		prev = @prev false
 		if prev
-			return prev.offset() + prev.length
+			return prev.offset() + prev.output.length
 		else
 			return 0
 
