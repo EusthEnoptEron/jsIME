@@ -1,5 +1,5 @@
 TransformableText = require "./transformabletext.coffee"
-Transformation = require "./transformation.coffee"
+Writing = require "./writing.coffee"
 _ = require "underscore"
 
 Mode = 
@@ -22,18 +22,18 @@ Key =
 class Composition extends TransformableText
 	mode: Mode.Composing
 	
-	transformations: []
+	writings: []
 
 	constructor: (@store) ->
-	activeTransformation: ->
-		for transformation in @transformations
-			return transformation if transformation.active
+	activeWriting: ->
+		for writing in @writings
+			return writing if writing.active
 	clean: ->
-		for transformation, i in @transformations when transformation.length == 0
-			transformation.destroy()
-			@transformations[i] = null
+		for writing, i in @writings when writing.length == 0
+			writing.destroy()
+			@writings[i] = null
 
-		@transformations = _.compact @transformations
+		@writings = _.compact @writings
 
 	preInterpret: (e) ->
 		if @mode == Mode.Composing
@@ -52,17 +52,17 @@ class Composition extends TransformableText
 			switch e.which
 				when Key.Left
 					if e.shiftKey
-						@activeTransformation()?.moveTail(-1)
+						@activeWriting()?.moveTail(-1)
 					else
-						@activeTransformation()?.prev(false)?.activate()
+						@activeWriting()?.prev(false)?.activate()
 				when Key.Right
 					if e.shiftKey
-						@activeTransformation()?.moveTail(+1)
+						@activeWriting()?.moveTail(+1)
 					else
-						@activeTransformation()?.next(false)?.activate()
+						@activeWriting()?.next(false)?.activate()
 				when Key.Enter then @finalize()
-				when Key.Down, Key.Space then @activeTransformation()?.nextChoice()
-				when Key.Up then @activeTransformation()?.prevChoice()
+				when Key.Down, Key.Space then @activeWriting()?.nextChoice()
+				when Key.Up then @activeWriting()?.prevChoice()
 				when Key.Backspace
 					@setMode Mode.Composing
 				when Key.Shift then return false
@@ -88,8 +88,8 @@ class Composition extends TransformableText
 		if mode == @mode then return false
 
 		if mode == Mode.Composing
-			# Clear transformations
-			@transformations.shift().destroy() until !@transformations.length
+			# Clear writings
+			@writings.shift().destroy() until !@writings.length
 
 			# Set text & cursor correctly
 			@replaceText 0, @preview.length, @input
@@ -98,7 +98,7 @@ class Composition extends TransformableText
 			@mode = mode
 
 		if mode == Mode.Selecting
-			@transformations = [ new Transformation this, 0, @input.length, true ]
+			@writings = [ new Writing this, 0, @input.length, true ]
 
 			@mode = mode
 
