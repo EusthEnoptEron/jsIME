@@ -61,7 +61,13 @@ class TransformableText extends EventEmitter2
 
 		@replaceText 0, @selectionStart, text, true
 		@selectText @selectionEnd, @selectionEnd
+	
+	convertText: ->
+		text = @input.substr(0, @selectionStart)		
+		text = convert text, false
 
+		@replaceText 0, @selectionStart, text, true
+		@selectText @selectionEnd, @selectionEnd
 
 `
 function convert(str, delay) {
