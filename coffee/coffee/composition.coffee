@@ -107,7 +107,7 @@ class Composition extends TransformableText
 			@mode = mode
 
 		if mode == Mode.Selecting
-			@convertText()
+			@convertAll()
 			@writings = [ new Writing this, 0, @input.length, true ]
 
 			@mode = mode
