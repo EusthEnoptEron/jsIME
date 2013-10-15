@@ -5,11 +5,15 @@ _ = require "underscore"
 
 FIRST_CHAR = '!'.charCodeAt(0)
 
-class JsIME extends EventEmitter2 
+class JsIME extends EventEmitter2
 	composition: null
 	offset: 0
+	windowShown: false
 	constructor: (@store) ->
-
+		super
+			wildcard: true
+			delimiter: "."
+			
 	# Interpret input before it is written
 	preInterpret: (e) ->
 		return true unless @composition?
@@ -37,8 +41,16 @@ class JsIME extends EventEmitter2
 			@emit "text.replace", from + @offset, to + @offset, text
 
 		# Forward event
-		@composition.on "window.*", ->
-			self.emit.apply self, [@event].concat _.values(arguments)
+		# @composition.on "window.*", ->
+		# 	self.emit.apply self, [@event].concat _.values(arguments)
+		@composition.on "window.show", ->
+			self.emit.apply self, [@event].concat _.values(arguments) unless @windowShown
+			@windowShown = true
+		@composition.on "window.select", ->
+			self.emit.apply self, [@event].concat _.values(arguments) if @windowShown
+		@composition.on "window.hide", ->
+			self.emit.apply self, [@event].concat _.values(arguments) if @windowShown
+			@windowShown = false
 
 		@composition.on "done", =>
 			@composition = null

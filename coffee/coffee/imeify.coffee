@@ -50,7 +50,7 @@ imeify = (box, store) ->
 		for value in values
 			bonzo(bonzo.create "<li>")
 			    .append(
-			    	bonzo(bonzo.create "<span>").text(val)
+			    	bonzo(bonzo.create "<span>").text(value)
 			    )
 			    .appendTo(win)
 		

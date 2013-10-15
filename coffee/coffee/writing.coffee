@@ -36,8 +36,10 @@ class Writing extends EventEmitter2
 			@updateList(choices) unless reqid isnt @reqid
 
 	resetList: () ->
-		@choices = [@input]
+		@setChoices [@input]
 		@dirty = true
+
+		# Give some time to search for choices before resetting the output
 		setTimeout(
 			=>
 				if @dirty	
@@ -50,15 +52,20 @@ class Writing extends EventEmitter2
 
 
 	updateList: (choices) ->
-		@choices = choices
+		@setChoices choices
 		@setIndex 1
 		@dirty = false
+
+	setChoices: (choices) ->
+		@choices = choices
 
 	setIndex: (i) ->
 		return if not @composition?
 
 		@choiceIndex = (@choices.length + i) % @choices.length
 		@setOutput @choices[@choiceIndex]
+
+		@composition.showWindow @choices, @choiceIndex
 
 	# Update output that is displayed for the range of this transformation
 	setOutput: (output) ->

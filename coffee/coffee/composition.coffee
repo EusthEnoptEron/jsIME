@@ -34,6 +34,12 @@ class Composition extends TransformableText
 			@writings[i] = null
 
 		@writings = _.compact @writings
+	showWindow: (choices, index) ->
+		@emit "window.show", choices
+		@emit "window.select", index
+
+	hideWindow: ->
+		@emit "window.hide"
 
 	preInterpret: (e) ->
 		if @mode == Mode.Composing
@@ -81,6 +87,7 @@ class Composition extends TransformableText
 
 		return false
 	finalize: ->
+		@hideWindow()
 		@selectText @preview.length, @preview.length
 		@emit "done"
 
@@ -88,6 +95,8 @@ class Composition extends TransformableText
 		if mode == @mode then return false
 
 		if mode == Mode.Composing
+			@hideWindow()
+
 			# Clear writings
 			@writings.shift().destroy() until !@writings.length
 
