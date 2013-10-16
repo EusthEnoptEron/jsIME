@@ -176,14 +176,11 @@ module.exports = function(grunt) {
   grunt.registerTask("build-client", [
     "get-edict",
     "parse:client",
-    "concat:dict",
-    "browserify",
-    "concat:vanilla",
-    "uglify:vanilla"]);
+    "brew"]);
 
   grunt.registerTask("build", ["build-server", "build-client"]);
   grunt.registerTask("default", ["build"]);
   grunt.registerTask("compile", ["concat:dict", "browserify:vanilla", "concat:vanilla", "uglify:vanilla"]);
-  grunt.registerTask("brew", ["concat:dict", "browserify:coffee", "concat:coffee" /*, "uglify:coffee" */]);
+  grunt.registerTask("brew", ["concat:dict", "browserify:coffee", "concat:coffee" , "uglify:coffee" ]);
   grunt.registerTask("csharp", ["concat:dict", "browserify:csharp"]);
 };
