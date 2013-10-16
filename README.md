@@ -14,7 +14,14 @@ Just clone the repository `git clone git@github.com:EusthEnoptEron/jsIME.git` an
 $ cd jsIME
 $ npm install
 $ grunt
+
+# and for CoffeeScript:
+$ grunt brew
 ```
+
+Vanilla vs CoffeeScript
+-------
+The IME was entirely rewritten in CoffeeScript in order to fix some quirks and ugly spots that appeared in the JS version. It is thus to be considered cleaner and more stable.
 
 Usage
 -----
