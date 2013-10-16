@@ -59,13 +59,15 @@ class Writing extends EventEmitter2
 	setChoices: (choices) ->
 		@choices = choices
 
+		@composition?.showWindow @choices if @active
+
 	setIndex: (i) ->
 		return if not @composition?
 
 		@choiceIndex = (@choices.length + i) % @choices.length
 		@setOutput @choices[@choiceIndex]
 
-		@composition.showWindow @choices, @choiceIndex
+		@composition.selectEntry @choiceIndex if @active
 
 	# Update output that is displayed for the range of this transformation
 	setOutput: (output) ->
@@ -152,6 +154,9 @@ class Writing extends EventEmitter2
 			# select this item
 			offset = @offset()
 			@composition.selectText( offset, offset + @output.length )
+
+			@composition.showWindow @choices
+			@composition.selectEntry @choiceIndex
 
 
 module.exports = Writing

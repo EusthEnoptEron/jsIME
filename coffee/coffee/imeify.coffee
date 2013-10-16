@@ -12,6 +12,8 @@ imeify = (box, store) ->
 	      .addClass("ime_window")
 	      .appendTo(document.body)
 
+	positioned = false
+
 	# Prepare store
 	unless store?.getSelections?
 		if store == "server"
@@ -44,6 +46,7 @@ imeify = (box, store) ->
 		I.replaceSelectedText(text, true)
 
 	ime.on "window.show", (values) ->
+
 		# Add values
 		win.empty()
 
@@ -54,15 +57,7 @@ imeify = (box, store) ->
 			    )
 			    .appendTo(win)
 		
-		# Reposition window
-		pos  = I.getCaretPosition()
-		bpos = bonzo(box).offset()
-
-		win.css
-			left: pos.left + bpos.left
-			top:  pos.bottom + bpos.top + 3
-
-		win.show "block"
+		positioned = false
 
 	ime.on "window.hide", () ->
 		win.hide()
@@ -74,6 +69,19 @@ imeify = (box, store) ->
 			else
 				bonzo(li).removeClass "selected"
 
+		positionWindow() unless positioned
+	
+	positionWindow = ->
+		# Reposition window
+		pos  = I.getCaretPosition()
+		bpos = bonzo(box).offset()
+
+		win.css
+			left: pos.left + bpos.left
+			top:  pos.bottom + bpos.top + 3
+
+		win.show "block"
+		positioned = true
 
 module.exports = imeify
 window?.imeify = imeify

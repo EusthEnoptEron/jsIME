@@ -23,6 +23,7 @@ class Composition extends TransformableText
 	mode: Mode.Composing
 	
 	writings: []
+	windowShown: false
 
 	constructor: (@store) ->
 	activeWriting: ->
@@ -34,12 +35,16 @@ class Composition extends TransformableText
 			@writings[i] = null
 
 		@writings = _.compact @writings
-	showWindow: (choices, index) ->
+	showWindow: (choices) ->
 		@emit "window.show", choices
-		@emit "window.select", index
+		@windowShown = true
+
+	selectEntry: (index) ->
+		@emit "window.select", index if @windowShown
 
 	hideWindow: ->
-		@emit "window.hide"
+		@emit "window.hide" if @windowShown
+		@windowShown = false
 
 	preInterpret: (e) ->
 		if @mode == Mode.Composing

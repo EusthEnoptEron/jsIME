@@ -8,7 +8,6 @@ FIRST_CHAR = '!'.charCodeAt(0)
 class JsIME extends EventEmitter2
 	composition: null
 	offset: 0
-	windowShown: false
 	constructor: (@store) ->
 		super
 			wildcard: true
@@ -44,13 +43,11 @@ class JsIME extends EventEmitter2
 		# @composition.on "window.*", ->
 		# 	self.emit.apply self, [@event].concat _.values(arguments)
 		@composition.on "window.show", ->
-			self.emit.apply self, [@event].concat _.values(arguments) unless @windowShown
-			@windowShown = true
+			self.emit.apply self, [@event].concat _.values(arguments)
 		@composition.on "window.select", ->
-			self.emit.apply self, [@event].concat _.values(arguments) if @windowShown
+			self.emit.apply self, [@event].concat _.values(arguments)
 		@composition.on "window.hide", ->
-			self.emit.apply self, [@event].concat _.values(arguments) if @windowShown
-			@windowShown = false
+			self.emit.apply self, [@event].concat _.values(arguments)
 
 		@composition.on "done", =>
 			@composition = null
