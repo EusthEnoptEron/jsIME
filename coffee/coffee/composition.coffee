@@ -53,6 +53,9 @@ class Composition extends TransformableText
 		@finalize() if aborted
 
 	preInterpret: (e) ->
+		# Zero tolerance while we're composing a text.
+		return false if e.ctrlKey
+
 		if @mode == Mode.Composing
 			switch e.which
 				when Key.Left then @moveCursor -1
