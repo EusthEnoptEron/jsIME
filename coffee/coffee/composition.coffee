@@ -46,13 +46,19 @@ class Composition extends TransformableText
 		@emit "window.hide" if @windowShown
 		@windowShown = false
 
+	removeLetter: (direction = -1) ->
+		aborted = (@selectionStart + direction) < 0
+		@replaceText(@selectionStart + direction, @selectionEnd, "", true)
+
+		@finalize() if aborted
+
 	preInterpret: (e) ->
 		if @mode == Mode.Composing
 			switch e.which
 				when Key.Left then @moveCursor -1
 				when Key.Right then @moveCursor +1
 				when Key.Enter then @finalize()
-				when Key.Backspace then @replaceText(@selectionStart - 1, @selectionEnd, "", true)
+				when Key.Backspace then @removeLetter -1
 				when Key.Space then @setMode(Mode.Selecting)
 				when Key.Down, Key.Up
 					return false
