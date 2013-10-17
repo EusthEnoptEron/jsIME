@@ -98,7 +98,21 @@ describe "composition", ->
 				done()
 			10)
 
-	
+	it "should convert back to hiragana after selecting all transforms", ->
+		composition = new Composition(store)
+
+		inputText "gashinshoutann", composition
+		input SPACE, composition
+
+		setTimeout(
+			->
+				# Put this here because the script needs to fetch the dictionary
+				# data first.
+				input SPACE, composition # -> 臥薪嘗胆
+				input SPACE, composition # -> がしんしょうたん
+				expect(composition.text.current()).to.not.equal "がしんしょうたん"
+				done()
+			500)
 
 ###
 
