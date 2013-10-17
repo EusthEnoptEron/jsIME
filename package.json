@@ -26,6 +26,7 @@
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-browserify": "~1.2.1",
-    "coffeeify": "~0.5.1"
+    "coffeeify": "~0.5.1",
+    "expect.js": "~0.2.0"
   }
 }
